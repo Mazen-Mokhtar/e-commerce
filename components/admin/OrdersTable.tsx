@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { OrderStatusBadge } from '@/components/ui/OrderStatusBadge';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Eye, Edit } from 'lucide-react';
 import Link from 'next/link';
 
@@ -30,6 +31,7 @@ interface OrdersTableProps {
 }
 
 export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableProps) {
+  const { language, isRTL } = useLanguage();
   const [editingOrder, setEditingOrder] = useState<string | null>(null);
   const [newStatus, setNewStatus] = useState('');
   const [rejectedReason, setRejectedReason] = useState('');
@@ -44,17 +46,19 @@ export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableP
   };
 
   const statusOptions = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'placed', label: 'Placed' },
-    { value: 'shipped', label: 'Shipped' },
-    { value: 'delivered', label: 'Delivered' },
-    { value: 'canceled', label: 'Canceled' },
+    { value: 'pending', label: language === 'ar' ? 'قيد الانتظار' : 'Pending' },
+    { value: 'placed', label: language === 'ar' ? 'تم التأكيد' : 'Placed' },
+    { value: 'shipped', label: language === 'ar' ? 'تم الشحن' : 'Shipped' },
+    { value: 'delivered', label: language === 'ar' ? 'تم التسليم' : 'Delivered' },
+    { value: 'canceled', label: language === 'ar' ? 'ملغي' : 'Canceled' },
   ];
 
   if (orders.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
-        <p className="text-gray-500 dark:text-gray-400">No orders found</p>
+        <p className="text-gray-500 dark:text-gray-400">
+          {language === 'ar' ? 'لا توجد طلبات' : 'No orders found'}
+        </p>
       </div>
     );
   }
@@ -65,26 +69,26 @@ export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableP
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Order
+              <th className={`px-6 py-3 ${isRTL ? 'text-right' : 'text-left'} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}>
+                {language === 'ar' ? 'الطلب' : 'Order'}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Customer
+              <th className={`px-6 py-3 ${isRTL ? 'text-right' : 'text-left'} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}>
+                {language === 'ar' ? 'العميل' : 'Customer'}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Items
+              <th className={`px-6 py-3 ${isRTL ? 'text-right' : 'text-left'} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}>
+                {language === 'ar' ? 'العناصر' : 'Items'}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Total
+              <th className={`px-6 py-3 ${isRTL ? 'text-right' : 'text-left'} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}>
+                {language === 'ar' ? 'الإجمالي' : 'Total'}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Status
+              <th className={`px-6 py-3 ${isRTL ? 'text-right' : 'text-left'} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}>
+                {language === 'ar' ? 'الحالة' : 'Status'}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Payment
+              <th className={`px-6 py-3 ${isRTL ? 'text-right' : 'text-left'} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}>
+                {language === 'ar' ? 'الدفع' : 'Payment'}
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Actions
+              <th className={`px-6 py-3 ${isRTL ? 'text-left' : 'text-right'} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}>
+                {language === 'ar' ? 'الإجراءات' : 'Actions'}
               </th>
             </tr>
           </thead>
@@ -97,23 +101,23 @@ export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableP
                       #{order.orderId || order._id.slice(-8)}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(order.createdAt).toLocaleDateString()}
+                      {new Date(order.createdAt).toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US')}
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div>
                     <div className="text-sm font-medium text-gray-900 dark:text-white">
-                      {order.createdBy?.name || 'Unknown'}
+                      {order.createdBy?.name || (language === 'ar' ? 'غير معروف' : 'Unknown')}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {order.createdBy?.email || 'No email'}
+                      {order.createdBy?.email || (language === 'ar' ? 'لا يوجد بريد إلكتروني' : 'No email')}
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900 dark:text-white">
-                    {order.products?.length || 0} items
+                    {order.products?.length || 0} {language === 'ar' ? 'عنصر' : 'items'}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -129,7 +133,7 @@ export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableP
                         onChange={(e) => setNewStatus(e.target.value)}
                         className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
-                        <option value="">Select Status</option>
+                        <option value="">{language === 'ar' ? 'اختر الحالة' : 'Select Status'}</option>
                         {statusOptions.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label}
@@ -139,19 +143,19 @@ export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableP
                       {newStatus === 'canceled' && (
                         <input
                           type="text"
-                          placeholder="Rejection reason"
+                          placeholder={language === 'ar' ? 'سبب الإلغاء' : 'Rejection reason'}
                           value={rejectedReason}
                           onChange={(e) => setRejectedReason(e.target.value)}
                           className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white w-full"
                         />
                       )}
-                      <div className="flex space-x-1">
+                      <div className={`flex ${isRTL ? 'space-x-reverse' : ''} space-x-1`}>
                         <Button
                           size="sm"
                           onClick={() => handleStatusUpdate(order._id)}
                           disabled={!newStatus || isUpdating}
                         >
-                          Save
+                          {language === 'ar' ? 'حفظ' : 'Save'}
                         </Button>
                         <Button
                           size="sm"
@@ -162,7 +166,7 @@ export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableP
                             setRejectedReason('');
                           }}
                         >
-                          Cancel
+                          {language === 'ar' ? 'إلغاء' : 'Cancel'}
                         </Button>
                       </div>
                     </div>
@@ -176,11 +180,14 @@ export function OrdersTable({ orders, onStatusUpdate, isUpdating }: OrdersTableP
                       ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                       : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                   }`}>
-                    {order.paymentMethod === 'card' ? 'Card' : 'Cash'}
+                    {order.paymentMethod === 'card' 
+                      ? (language === 'ar' ? 'بطاقة' : 'Card')
+                      : (language === 'ar' ? 'نقدي' : 'Cash')
+                    }
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <div className="flex items-center justify-end space-x-2">
+                <td className={`px-6 py-4 whitespace-nowrap ${isRTL ? 'text-left' : 'text-right'} text-sm font-medium`}>
+                  <div className={`flex items-center justify-end ${isRTL ? 'space-x-reverse' : ''} space-x-2`}>
                     <Link href={`/admin/orders/${order._id}`}>
                       <Button variant="ghost" size="sm">
                         <Eye className="h-4 w-4" />

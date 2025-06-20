@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsEnum, IsMongoId, IsNumber, IsOptional, IsPositive, IsString, Matches, Max, MaxLength, MinLength } from "class-validator";
 import { Types } from "mongoose";
 import { IPaymentMethod } from "src/DB/models/Order/order.schema";
@@ -47,6 +48,7 @@ export class AdminOrderQueryDTO {
     @IsOptional()
     status?: OrderStatus;
     
+    @Type(() => Number)
     @IsNumber()
     @IsOptional()
     page?: number;

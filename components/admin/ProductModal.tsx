@@ -30,7 +30,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
 
   // Fetch categories for dropdown
-  const { data: categoriesData } = useQuery({
+  const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
     queryKey: ['admin-categories'],
     queryFn: () => adminAPI.getCategories(),
     enabled: isOpen,
@@ -97,7 +97,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
         if (key === 'colors' || key === 'size') {
           // Convert comma-separated string to array
           const arrayValue = value.split(',').map(item => item.trim()).filter(Boolean);
-          submitData.append(key, JSON.stringify(arrayValue));
+          arrayValue.forEach(val => submitData.append(key, val));
         } else {
           submitData.append(key, value);
         }
@@ -124,7 +124,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
   if (!isOpen) return null;
 
-  const categories = categoriesData?.data?.documents || [];
+  const categories = categoriesData?.data|| [];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -163,6 +163,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                 className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">Select Category</option>
+                {categoriesLoading && (
+                  <option disabled>Loading categories...</option>
+                )}
+                {!categoriesLoading && categories.length === 0 && (
+                  <option disabled>No categories found</option>
+                )}
                 {categories.map((category: any) => (
                   <option key={category._id} value={category._id}>
                     {category.name}

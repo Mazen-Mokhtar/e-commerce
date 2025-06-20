@@ -14,6 +14,15 @@ export interface Translations {
   search: string;
   cart: string;
   
+  // Admin Panel
+  dashboard: string;
+  ordersManagement: string;
+  productsManagement: string;
+  categoriesManagement: string;
+  couponsManagement: string;
+  backToStore: string;
+  administrator: string;
+  
   // Products Page
   discoverProducts: string;
   highQualityProducts: string;
@@ -170,6 +179,8 @@ export interface Translations {
   confirm: string;
   yes: string;
   no: string;
+  refresh: string;
+  export: string;
   
   // Theme
   lightMode: string;
@@ -251,6 +262,15 @@ export const translations: Record<Language, Translations> = {
     adminPanel: 'لوحة الإدارة',
     search: 'البحث',
     cart: 'سلة التسوق',
+    
+    // Admin Panel
+    dashboard: 'لوحة التحكم',
+    ordersManagement: 'إدارة الطلبات',
+    productsManagement: 'إدارة المنتجات',
+    categoriesManagement: 'إدارة الفئات',
+    couponsManagement: 'إدارة الكوبونات',
+    backToStore: 'العودة للمتجر',
+    administrator: 'مدير النظام',
     
     // Products Page
     discoverProducts: 'اكتشف مجموعتنا المتنوعة من المنتجات عالية الجودة',
@@ -408,6 +428,8 @@ export const translations: Record<Language, Translations> = {
     confirm: 'تأكيد',
     yes: 'نعم',
     no: 'لا',
+    refresh: 'تحديث',
+    export: 'تصدير',
     
     // Theme
     lightMode: 'الوضع الفاتح',
@@ -487,6 +509,15 @@ export const translations: Record<Language, Translations> = {
     adminPanel: 'Admin Panel',
     search: 'Search',
     cart: 'Cart',
+    
+    // Admin Panel
+    dashboard: 'Dashboard',
+    ordersManagement: 'Orders Management',
+    productsManagement: 'Products Management',
+    categoriesManagement: 'Categories Management',
+    couponsManagement: 'Coupons Management',
+    backToStore: 'Back to Store',
+    administrator: 'Administrator',
     
     // Products Page
     discoverProducts: 'Discover our diverse collection of high-quality products',
@@ -644,6 +675,8 @@ export const translations: Record<Language, Translations> = {
     confirm: 'Confirm',
     yes: 'Yes',
     no: 'No',
+    refresh: 'Refresh',
+    export: 'Export',
     
     // Theme
     lightMode: 'Light Mode',

@@ -19,7 +19,10 @@ export interface Product {
     secure_url: string;
     public_id: string;
   }[];
-  categoryId: string;
+  categoryId: string | {
+    _id: string;
+    name: string;
+  };
   createdBy: string;
   folderId: string;
   createdAt: string;

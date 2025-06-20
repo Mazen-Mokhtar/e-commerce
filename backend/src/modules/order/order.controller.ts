@@ -13,7 +13,24 @@ import { RoleTypes } from "src/DB/models/User/user.schema";
 @Controller("order")
 export class orderController {
     constructor(private readonly orderService: orderService) { }
-
+    @Get("admin/stats")
+    @Roles([RoleTypes.ADMIN])
+    @UseGuards(AuthGuard, RolesGuard)
+    async getOrderStats() {
+        return await this.orderService.getOrderStats();
+    }
+    @Get()
+    @Roles(["user"])
+    @UseGuards(AuthGuard, RolesGuard)
+    async getOrders(@User() user: TUser) {
+        return await this.orderService.getUserOrders(user._id);
+    }
+    @Get("admin/all")
+    @Roles([RoleTypes.ADMIN, RoleTypes.DELIVERY])
+    @UseGuards(AuthGuard, RolesGuard)
+    async getAllOrders(@User() user: TUser, @Query() query: AdminOrderQueryDTO) {
+        return await this.orderService.getAllOrders(query, user);
+    }
     @Post("/")
     @Roles(["user"])
     @UseGuards(AuthGuard, RolesGuard)
@@ -36,12 +53,7 @@ export class orderController {
     async refund(@User() user: TUser, @Param() param: orderIdDTO) {
         return await this.orderService.cancelOrder(user, param.orderId)
     }
-    @Get()
-    @Roles(["user"])
-    @UseGuards(AuthGuard, RolesGuard)
-    async getOrders(@User() user: TUser) {
-        return await this.orderService.getUserOrders(user._id);
-    }
+    
     @Get(':orderId')
     @Roles(["user"])
     @UseGuards(AuthGuard, RolesGuard)
@@ -51,12 +63,7 @@ export class orderController {
     }
 
     // Admin Dashboard Endpoints
-    @Get("admin/all")
-    @Roles([RoleTypes.ADMIN, RoleTypes.DELIVERY])
-    @UseGuards(AuthGuard, RolesGuard)
-    async getAllOrders(@User() user: TUser, @Query() query: AdminOrderQueryDTO) {
-        return await this.orderService.getAllOrders(query, user);
-    }
+    
 
     @Get("admin/:orderId")
     @Roles([RoleTypes.ADMIN, RoleTypes.DELIVERY])
@@ -74,10 +81,5 @@ export class orderController {
         return await this.orderService.updateOrderStatus(admin, orderId, body);
     }
 
-    @Get("admin/stats")
-    @Roles([RoleTypes.ADMIN])
-    @UseGuards(AuthGuard, RolesGuard)
-    async getOrderStats() {
-        return await this.orderService.getOrderStats();
-    }
+    
 }

@@ -195,4 +195,26 @@ export const adminAPI = {
     });
     return response.data;
   },
+
+  // Dashboard Widgets
+  getRevenueTrend: async (period = 'monthly') => {
+    const token = localStorage.getItem('token');
+    const response = await api.get(`/dashboard/revenue-trend?period=${period}`,
+      { headers: token ? { Authorization: token } : {} });
+    return response.data;
+  },
+
+  getTopProducts: async (limit = 5) => {
+    const token = localStorage.getItem('token');
+    const response = await api.get(`/dashboard/top-products?limit=${limit}`,
+      { headers: token ? { Authorization: token } : {} });
+    return response.data;
+  },
+
+  getCustomerActivity: async () => {
+    const token = localStorage.getItem('token');
+    const response = await api.get('/dashboard/customer-activity',
+      { headers: token ? { Authorization: token } : {} });
+    return response.data;
+  },
 };

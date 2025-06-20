@@ -29,7 +29,7 @@ export class CartController {
         return await this.cartService.clearCart(user)
     }
     @Get()
-    @Roles([RoleTypes.USER])
+    @Roles([RoleTypes.USER , RoleTypes.ADMIN])
     @UseGuards(AuthGuard, RolesGuard)
     async getCart(@User() user: TUser) {
         return await this.cartService.getCart(user)

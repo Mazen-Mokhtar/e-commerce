@@ -8,11 +8,10 @@ import { Roles } from "src/commen/Decorator/roles.decorator";
 @Controller("user")
 export class userController {
     constructor(private readonly userService: userService) { }
+    
     @Get("profile")
-    @Roles(["admin"])
-    @UseGuards(AuthGuard,RolesGuard)
+    @UseGuards(AuthGuard)
     getProfile(@Req() req: Request) {
         return this.userService.getProfile(req)
     }
 }
-

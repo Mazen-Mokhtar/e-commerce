@@ -77,7 +77,11 @@ export default function AdminOrderDetailsPage() {
     );
   }
 
-  const order = orderData.data.data;
+  const order = orderData.data;
+
+  if (!order) {
+    return <div>Order not found or loading...</div>;
+  }
 
   const statusOptions = [
     { value: 'pending', label: 'Pending' },
@@ -104,45 +108,47 @@ export default function AdminOrderDetailsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Order #{order.orderId || order._id.slice(-8)}
+                Order #{order?.orderId || order?._id?.slice(-8) || ""}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Placed on {new Date(order.createdAt).toLocaleDateString()}
+                Placed on {order ? new Date(order.createdAt).toLocaleDateString() : ""}
               </p>
             </div>
             
             <div className="flex items-center space-x-4">
-              <OrderStatusBadge status={order.status} size="lg" />
+              {order && <OrderStatusBadge status={order.status} size="lg" />}
               
               {/* Status Update Dropdown */}
               <div className="flex items-center space-x-2">
-                <select
-                  onChange={(e) => {
-                    const newStatus = e.target.value;
-                    if (newStatus && newStatus !== order.status) {
-                      if (newStatus === 'canceled') {
-                        const reason = prompt('Please provide a reason for cancellation:');
-                        if (reason) {
-                          handleStatusUpdate(newStatus, reason);
+                {order && (
+                  <select
+                    onChange={(e) => {
+                      const newStatus = e.target.value;
+                      if (newStatus && newStatus !== order.status) {
+                        if (newStatus === 'canceled') {
+                          const reason = prompt('Please provide a reason for cancellation:');
+                          if (reason) {
+                            handleStatusUpdate(newStatus, reason);
+                          }
+                        } else {
+                          handleStatusUpdate(newStatus);
                         }
-                      } else {
-                        handleStatusUpdate(newStatus);
                       }
-                    }
-                  }}
-                  value=""
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  disabled={updateOrderMutation.isPending}
-                >
-                  <option value="">Update Status</option>
-                  {statusOptions
-                    .filter(option => option.value !== order.status)
-                    .map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                </select>
+                    }}
+                    value=""
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    disabled={updateOrderMutation.isPending}
+                  >
+                    <option value="">Update Status</option>
+                    {statusOptions
+                      .filter(option => option.value !== order.status)
+                      .map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                  </select>
+                )}
               </div>
             </div>
           </div>
