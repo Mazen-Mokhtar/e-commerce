@@ -89,9 +89,6 @@ export default function AdminDashboard() {
     queryFn: () => adminAPI.getCustomerActivity(),
     enabled: isAuthenticated && isAdmin,
   });
-  console.log({customerActivity});
-  console.log({revenueTrend});
-  console.log({topProducts});
   
   // Show loading while checking authentication
   if (!isAuthenticated || !isAdmin) {
