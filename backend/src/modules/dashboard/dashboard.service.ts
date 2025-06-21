@@ -9,7 +9,7 @@ export class DashboardService {
     private readonly orderRepository: orderRepository,
     private readonly productRepository: ProductRepository,
     private readonly userRepository: UserRepository,
-  ) {}
+  ) { }
 
   async getRevenueTrend(period: string) {
     // period: 'monthly' | 'daily'
@@ -17,42 +17,51 @@ export class DashboardService {
       ? { $dateToString: { format: '%Y-%m-%d', date: '$paidAt' } }
       : { $dateToString: { format: '%Y-%m', date: '$paidAt' } };
     const pipeline = [
-      { $match: { status: 'delivered', paidAt: { $ne: null } } },
-      { $group: {
-        _id: groupBy,
-        totalRevenue: { $sum: '$finalPrice' },
-        count: { $sum: 1 },
-      } },
+      { $match: { status: 'delivered', paidAt: { $exists: true } } },
+      {
+        $group: {
+          _id: groupBy,
+          totalRevenue: { $sum: '$finalPrice' },
+          count: { $sum: 1 },
+        }
+      },
       { $sort: { _id: 1 as 1 | -1 } },
     ];
-    return this.orderRepository.aggregate(pipeline);
+    const data = await this.orderRepository.aggregate(pipeline);
+    return {success : true , data}
   }
 
   async getTopProducts(limit: number = 5) {
+    const parsedLimit = typeof limit === 'string' ? parseInt(limit, 10) : limit;
     const pipeline = [
-      { $match: { status: 'delivered', paidAt: { $ne: null } } },
+      { $match: { status: 'delivered', paidAt: { $exists: true } } },
       { $unwind: '$products' },
-      { $group: {
-        _id: '$products.productId',
-        name: { $first: '$products.name' },
-        totalSold: { $sum: '$products.quantity' },
-        totalRevenue: { $sum: '$products.finalPrice' },
-      } },
+      {
+        $group: {
+          _id: '$products.productId',
+          name: { $first: '$products.name' },
+          totalSold: { $sum: '$products.quantity' },
+          totalRevenue: { $sum: '$products.finalPrice' },
+        }
+      },
       { $sort: { totalSold: -1 as -1 | 1 } },
-      { $limit: limit },
+      { $limit: parsedLimit },
     ];
-    return this.orderRepository.aggregate(pipeline);
+    const data = await this.orderRepository.aggregate(pipeline);
+    return { success: true, data }
   }
 
   async getCustomerActivity() {
     const pipeline = [
-      { $match: { status: 'delivered', paidAt: { $ne: null } } },
-      { $group: {
-        _id: '$createdBy',
-        totalOrders: { $sum: 1 },
-        totalSpent: { $sum: '$finalPrice' },
-        lastOrder: { $max: '$paidAt' },
-      } },
+      { $match: { status: 'delivered', paidAt: { $exists: true } } },
+      {
+        $group: {
+          _id: '$createdBy',
+          totalOrders: { $sum: 1 },
+          totalSpent: { $sum: '$finalPrice' },
+          lastOrder: { $max: '$paidAt' },
+        }
+      },
       { $sort: { totalOrders: -1 as -1 | 1 } },
       {
         $lookup: {
@@ -75,6 +84,7 @@ export class DashboardService {
         },
       },
     ];
-    return this.orderRepository.aggregate(pipeline);
+    const data = await this.orderRepository.aggregate(pipeline);
+    return { success: true, data }
   }
 } 

@@ -37,7 +37,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-8`}>
             <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
               {t('home')}
             </Link>
@@ -50,7 +50,7 @@ export function Header() {
           </nav>
 
           {/* Right side actions */}
-          <div className="flex items-center">
+          <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2`}>
             {/* Language Toggle */}
             <LanguageToggle />
 
@@ -89,9 +89,9 @@ export function Header() {
             {isAuthenticated ? (
               <div className="relative">
                 <button 
-                  className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  title="قائمة المستخدم"
+                  title={t('myAccount')}
                 >
                   <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
@@ -102,60 +102,60 @@ export function Header() {
                 </button>
                 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50 border border-gray-200 dark:border-gray-700">
+                  <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50 border border-gray-200 dark:border-gray-700`}>
                     {/* User Info */}
                     <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
                       {isAdmin && (
-                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Administrator</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">{t('administrator')}</p>
                       )}
                     </div>
                     
                     {/* Menu Items */}
                     <Link 
                       href="/profile" 
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className={`flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                       onClick={() => setIsUserMenuOpen(false)}
                     >
-                      <User className="h-4 w-4 mr-3" />
-                      {t('profile')}
+                      <User className="h-4 w-4" />
+                      <span>{t('profile')}</span>
                     </Link>
                     
                     <Link 
                       href="/orders" 
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className={`flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                       onClick={() => setIsUserMenuOpen(false)}
                     >
-                      <Package className="h-4 w-4 mr-3" />
-                      {t('myOrders')}
+                      <Package className="h-4 w-4" />
+                      <span>{t('myOrders')}</span>
                     </Link>
                     
                     {isAdmin && (
                       <Link 
                         href="/admin" 
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className={`flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                         onClick={() => setIsUserMenuOpen(false)}
                       >
-                        <Settings className="h-4 w-4 mr-3" />
-                        {t('adminPanel')}
+                        <Settings className="h-4 w-4" />
+                        <span>{t('adminPanel')}</span>
                       </Link>
                     )}
                     
                     <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
                       <button
                         onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        className={`flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                       >
-                        <LogOut className="h-4 w-4 mr-3" />
-                        {t('logout')}
+                        <LogOut className="h-4 w-4" />
+                        <span>{t('logout')}</span>
                       </button>
                     </div>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-3`}>
                 <Link href="/auth/login">
                   <Button variant="outline" size="sm" className="hover:bg-blue-50 dark:hover:bg-blue-900/20">
                     {t('login')}
@@ -212,45 +212,45 @@ export function Header() {
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
                     {isAdmin && (
-                      <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Administrator</p>
+                      <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">{t('administrator')}</p>
                     )}
                   </div>
                   
                   <Link 
                     href="/profile" 
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    className={`flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <User className="h-4 w-4 mr-3" />
-                    {t('profile')}
+                    <User className="h-4 w-4" />
+                    <span>{t('profile')}</span>
                   </Link>
                   
                   <Link 
                     href="/orders" 
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    className={`flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <Package className="h-4 w-4 mr-3" />
-                    {t('myOrders')}
+                    <Package className="h-4 w-4" />
+                    <span>{t('myOrders')}</span>
                   </Link>
                   
                   {isAdmin && (
                     <Link 
                       href="/admin" 
-                      className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className={`flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Settings className="h-4 w-4 mr-3" />
-                      {t('adminPanel')}
+                      <Settings className="h-4 w-4" />
+                      <span>{t('adminPanel')}</span>
                     </Link>
                   )}
                   
                   <button
                     onClick={handleLogout}
-                    className="flex items-center w-full px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    className={`flex items-center w-full px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
                   >
-                    <LogOut className="h-4 w-4 mr-3" />
-                    {t('logout')}
+                    <LogOut className="h-4 w-4" />
+                    <span>{t('logout')}</span>
                   </button>
                 </div>
               )}

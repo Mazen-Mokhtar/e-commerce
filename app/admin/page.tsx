@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { adminAPI } from '@/lib/admin';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { DashboardStats } from '@/components/admin/DashboardStats';
 import { RecentOrders } from '@/components/admin/RecentOrders';
@@ -42,6 +43,7 @@ ChartJS.register(
 
 export default function AdminDashboard() {
   const { user, isAuthenticated, isAdmin } = useAuth();
+  const { t, language, isRTL } = useLanguage();
   const router = useRouter();
 
   // Redirect if not admin
@@ -108,28 +110,28 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center space-x-3 mb-2">
+          <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-3 mb-2`}>
             <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <BarChart3 className="h-6 w-6 text-white" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Admin Dashboard
+                {t('adminDashboard')}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Welcome back, {user?.name}! Here's what's happening with your store.
+                {t('welcome')} {user?.name}! {t('welcomeBack')}
               </p>
             </div>
           </div>
           
-          <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center space-x-1">
+          <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-4 text-sm text-gray-500 dark:text-gray-400`}>
+            <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-1`}>
               <Calendar className="h-4 w-4" />
-              <span>{new Date().toLocaleDateString('en-US', { 
+              <span>{new Date().toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
@@ -160,7 +162,7 @@ export default function AdminDashboard() {
           {/* Revenue Chart Widget */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Revenue Trend</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('revenueChart')}</h3>
               <TrendingUp className="h-5 w-5 text-green-500" />
             </div>
             {revenueLoading ? (
@@ -171,7 +173,7 @@ export default function AdminDashboard() {
                   labels: revenueTrend.data.map((item: any) => item._id),
                   datasets: [
                     {
-                      label: 'Revenue',
+                      label: t('totalRevenue'),
                       data: revenueTrend.data.map((item: any) => item.totalRevenue),
                       borderColor: '#22c55e',
                       backgroundColor: 'rgba(34,197,94,0.1)',
@@ -182,14 +184,17 @@ export default function AdminDashboard() {
                 options={{
                   responsive: true,
                   plugins: { legend: { display: false } },
-                  scales: { x: { title: { display: true, text: 'Month' } }, y: { title: { display: true, text: 'Revenue' } } },
+                  scales: { 
+                    x: { title: { display: true, text: t('thisMonth') } }, 
+                    y: { title: { display: true, text: t('totalRevenue') } } 
+                  },
                 }}
                 height={200}
               />
             ) : (
               <div className="text-center py-8">
                 <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500">No revenue data</p>
+                <p className="text-gray-500">{t('noResults')}</p>
               </div>
             )}
           </div>
@@ -197,7 +202,7 @@ export default function AdminDashboard() {
           {/* Top Products Widget */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Top Products</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('topProducts')}</h3>
               <Package className="h-5 w-5 text-blue-500" />
             </div>
             {topProductsLoading ? (
@@ -207,14 +212,14 @@ export default function AdminDashboard() {
                 {topProducts.data.map((product: any) => (
                   <li key={product._id} className="py-2 flex items-center justify-between">
                     <span className="font-medium text-gray-900 dark:text-white">{product.name}</span>
-                    <span className="text-sm text-gray-500">Sold: {product.totalSold}</span>
+                    <span className="text-sm text-gray-500">{t('sold')}: {product.totalSold}</span>
                   </li>
                 ))}
               </ul>
             ) : (
               <div className="text-center py-8">
                 <Package className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500">No top products data</p>
+                <p className="text-gray-500">{t('noResults')}</p>
               </div>
             )}
           </div>
@@ -222,7 +227,7 @@ export default function AdminDashboard() {
           {/* Customer Activity Widget */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Customer Activity</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('customerActivity')}</h3>
               <Users className="h-5 w-5 text-purple-500" />
             </div>
             {customerActivityLoading ? (
@@ -232,15 +237,15 @@ export default function AdminDashboard() {
                 {customerActivity.data.slice(0, 5).map((user: any) => (
                   <li key={user.userId} className="py-2 flex flex-col">
                     <span className="font-medium text-gray-900 dark:text-white">{user.name} ({user.email})</span>
-                    <span className="text-sm text-gray-500">Orders: {user.totalOrders} | Spent: ${user.totalSpent.toFixed(2)}</span>
-                    <span className="text-xs text-gray-400">Last order: {user.lastOrder ? new Date(user.lastOrder).toLocaleDateString() : 'N/A'}</span>
+                    <span className="text-sm text-gray-500">{t('orders')}: {user.totalOrders} | {t('totalSpent')}: ${user.totalSpent.toFixed(2)}</span>
+                    <span className="text-xs text-gray-400">{t('lastOrder')}: {user.lastOrder ? new Date(user.lastOrder).toLocaleDateString() : 'N/A'}</span>
                   </li>
                 ))}
               </ul>
             ) : (
               <div className="text-center py-8">
                 <Users className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500">No customer activity data</p>
+                <p className="text-gray-500">{t('noResults')}</p>
               </div>
             )}
           </div>

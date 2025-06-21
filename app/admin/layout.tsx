@@ -27,6 +27,7 @@ const navigation = [
   { name: 'Categories', nameAr: 'الفئات', href: '/admin/categories', icon: Tag },
   { name: 'Orders', nameAr: 'الطلبات', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Coupons', nameAr: 'الكوبونات', href: '/admin/coupons', icon: Ticket },
+  { name: 'Users', nameAr: 'المستخدمين', href: '/admin/users', icon: Users },
 ];
 
 export default function AdminLayout({
@@ -69,12 +70,12 @@ export default function AdminLayout({
         
         {/* Sidebar Header */}
         <div className="flex h-20 items-center justify-between px-6 border-b border-gray-700 flex-shrink-0">
-          <Link href="/admin" className="flex items-center space-x-3 rtl:space-x-reverse">
+          <Link href="/admin" className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-3`}>
             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
               <BarChart3 className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold text-white">
-              {language === 'ar' ? 'الإدارة' : 'Admin'}
+              {t('management')}
             </span>
           </Link>
           <button
@@ -118,18 +119,18 @@ export default function AdminLayout({
             <div className="space-y-2">
               <Link
                 href="/"
-                className="group flex items-center px-4 py-2.5 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors"
+                className={`group flex items-center px-4 py-2.5 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
               >
-                <Home className={`h-5 w-5 text-gray-400 group-hover:text-gray-300 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                {language === 'ar' ? 'العودة للمتجر' : 'Back to Store'}
+                <Home className={`h-5 w-5 text-gray-400 group-hover:text-gray-300`} />
+                {t('backToStore')}
               </Link>
 
               <button
                 onClick={logout}
-                className="group flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors text-left"
+                className={`group flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors text-left ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
               >
-                <LogOut className={`h-5 w-5 text-gray-400 group-hover:text-gray-300 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                {language === 'ar' ? 'تسجيل الخروج' : 'Logout'}
+                <LogOut className={`h-5 w-5 text-gray-400 group-hover:text-gray-300`} />
+                {t('logout')}
               </button>
             </div>
           </nav>
@@ -144,7 +145,7 @@ export default function AdminLayout({
             className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 dark:text-gray-400 dark:hover:text-white"
             onClick={() => setSidebarOpen(true)}
           >
-            <span className="sr-only">Open sidebar</span>
+            <span className="sr-only">{t('menu')}</span>
             <Menu className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>

@@ -5,8 +5,10 @@ export interface User {
   name: string;
   email: string;
   phone: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'delivery';
   isConfirm: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SignupData {
@@ -55,12 +57,10 @@ export const authAPI = {
   getProfile: async () => {
     const response = await api.get('/user/profile');
     console.log('Profile API response:', response.data);
-    console.log('Profile API response:', {test : response.data});
     // The profile endpoint returns the user data directly
     if (response.data) {
       return response.data;
     }
-    // throw new Error('Invalid response format from profile API');
   },
 };
 

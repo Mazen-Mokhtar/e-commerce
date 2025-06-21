@@ -27,7 +27,7 @@ export default function HomePage() {
   });
 
   const products = productsData?.data?.documents || [];
-  const categories = categoriesData?.data?.documents || [];
+  const categories = categoriesData?.data || [];
 
   return (
     <div className="min-h-screen">
